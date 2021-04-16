@@ -88,8 +88,31 @@ class JXCFrame{
         return tabbedPane;
     }
 
-    private Component createFrameButton(String chinese_info, String english_info) {
+    private JButton createFrameButton(String chinese_info, String english_info) {
+        String imgUrl = "res/Actionicon/"+ chinese_info +".png";
+        String imgUrl_roll = "res/Actionicon/" + chinese_info +"_roll.png";
+        String imgUrl_down = "res/Actionicon/" + chinese_info +"_down.png";
+        Icon icon = new ImageIcon(imgUrl);
+        Icon icon_roll = null;
+        if(imgUrl_roll !=null)
+            icon_roll = new ImageIcon(imgUrl_roll);
+        Icon icon_down = null;
+        if(imgUrl_down != null)
+            icon_down = new ImageIcon(imgUrl_down);
+        Action action = new openFrameAction(chinese_info,english_info,icon);
+        JButton button = new JButton(action);
+        button.setMargin(new Insets(0,0,0,0));
+        button.setHideAction(true);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        if(icon_roll != null)
+            button.setRolloverIcon(icon_roll);
+        if(icon_down != null)
+            button.setPressdIcon(icon_down);
+        return button;
     }
+    
 
     private void updateBackImage() {
         if(backLabel !=null) {
