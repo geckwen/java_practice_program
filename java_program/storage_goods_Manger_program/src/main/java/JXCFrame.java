@@ -112,7 +112,7 @@ class JXCFrame{
             button.setPressdIcon(icon_down);
         return button;
     }
-    
+
 
     private void updateBackImage() {
         if(backLabel !=null) {
@@ -130,11 +130,57 @@ class JXCFrame{
             e.printStackTrace();
         }
     }
+    protected final class openFrameAction extends AbstractAction{
+        private String frameName = null;
+        private openFrameAction(){
+        }
+        public openFrameAction(String cname, String frameName , Icon icon){
+            this.frameName = frameName;
+            putValue(Action.Name, cname);
+            putValue(Action.SHORT_DESCRIPTION, cname);
+            putValue(Action.SMALL_ICON,Icon);
+        }
+        public void actionPerformed(final ActionEvent e){
+            JInternalFrame jf = getFrame(frameName);
+            jf.addInternalFrameListener(new InternalFrameAdapter(){
+                public void internalFrameClosed(InternalFrameEvent e){
+                    ifs.remove(frameName);
+                }
+            });
+            if(jf.getDesktopPane()==null)
+            {
+                desktopPane.add(jf);
+                jf.setVisible(true);
+            }
+            try {
+                jf.setSelected(true);
+            }catch (PropertyVetoException e1){
+                e1.printStackTrace();
+            }
+        }
+    }
+    private JInternalFrame getIFrame(String frameName){
+        JInternalFrame jf = null;
+        if(!ifs.containsKey(frameName)){
+            try {
+                Class fClass = Class.forName("internalFrame."+frameName);
+                Constructor constructor = fClass.getConstructor(null);
+                jf = (JInternalFrame)constructor.newInstance(null);
+                ifs.put(frameName,jf);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }else
+            jf = ifs.get(frameName);
+        return jf;
+    }
 }
+
 public static void main(String[] args){
     SwingUtilities.invokeLater(new Runnable() {
         public void run() {
             new Login();
         }
     });
+
 }
